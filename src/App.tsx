@@ -1,6 +1,9 @@
-import generateDate from "./utils/Calender";
+import FullYear from "./components/FullYear";
 
 export default function MyApp() {
-  console.log(generateDate());
-  return <></>;
+  return (
+    <>
+      <FullYear />
+    </>
+  );
 }
