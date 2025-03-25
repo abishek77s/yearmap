@@ -1,9 +1,17 @@
 import { FormEvent, useRef, useState } from "react";
 import generateDate, { Month, months } from "../utils/Calender";
 import dayjs from "dayjs";
+import MonthDisplay from "./MonthDisplay";
 
 interface Num {
   number: number;
+}
+
+export interface EventDetails {
+  name?: string;
+  title?: string;
+  date: string;
+  img: File | null;
 }
 
 const MonthCalender = ({ number }: Num) => {
@@ -11,26 +19,46 @@ const MonthCalender = ({ number }: Num) => {
   const currentDate = dayjs().month(number);
   const titleRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
+  const imageRef = useRef<HTMLInputElement>(null);
+
+  const today = currentDate;
+
+  const [eventDetails, setEventDetails] = useState<EventDetails[]>([]);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  console.log(eventDetails);
+
+  const handleImageChange = () => {
+    const file = imageRef.current?.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    console.log(titleRef.current?.value, nameRef.current?.value);
-  };
-  const today = currentDate;
 
-  const [selectedDate, setSelectedDate] = useState(dayjs());
-  const eventDetails = {
-    name: nameRef.current?.value,
-    title: titleRef.current?.value,
-    date: selectedDate.toDate().toDateString(),
+    const file = imageRef.current?.files ? imageRef.current.files[0] : null;
+
+    setEventDetails([
+      ...eventDetails,
+      {
+        name: nameRef.current?.value,
+        title: titleRef.current?.value,
+        date: selectedDate.toDate().toDateString(),
+        img: file,
+      },
+    ]);
   };
-  console.log(eventDetails);
 
   const date: Month[] = generateDate(today.month(), today.year());
   return (
-    <div className=" flex gap-4">
+    <div className="flex gap-4">
       <div>
-        {" "}
         <div className="w-80 h-80">
           <div className="flex justify-between">
             <div>
@@ -39,18 +67,18 @@ const MonthCalender = ({ number }: Num) => {
               </h1>
             </div>
           </div>
-          <div className="w-full  grid grid-cols-7 text-gray-600">
+          <div className="w-full grid grid-cols-7 text-gray-600">
             {days.map((day, index) => (
               <div
                 key={index}
-                className="h-14 grid place-content-center  text-sm"
+                className="h-14 grid place-content-center text-sm"
               >
                 <h1>{day}</h1>
               </div>
             ))}
           </div>
 
-          <div className="w-full  grid grid-cols-7">
+          <div className="w-full grid grid-cols-7">
             {date.map((item, index) => {
               const { date, currentMonth, today } = item;
               return (
@@ -79,7 +107,7 @@ const MonthCalender = ({ number }: Num) => {
         </div>
       </div>
 
-      <form className="" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-y-2" onSubmit={handleSubmit}>
         <p>Adding for {selectedDate.toDate().toDateString()}</p>
         <label htmlFor="name">Event</label>
         <input
@@ -88,7 +116,7 @@ const MonthCalender = ({ number }: Num) => {
           id="name"
           name="name"
           ref={nameRef}
-        ></input>
+        />
         <label htmlFor="title">Title</label>
         <input
           className="bg-slate-200 border p-2 mb-2"
@@ -96,11 +124,32 @@ const MonthCalender = ({ number }: Num) => {
           id="title"
           name="title"
           ref={titleRef}
-        ></input>
+        />
+        <label htmlFor="image">Choose an image (JPG or PNG):</label>
+        <input
+          ref={imageRef}
+          type="file"
+          id="image"
+          name="image"
+          accept=".jpg, .jpeg, .png"
+          required
+          onChange={handleImageChange}
+        />
+        {imagePreview && (
+          <div className="mt-2">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="max-w-full h-40 object-cover"
+            />
+          </div>
+        )}
         <button className="p-2 bg-lime-500 text-white rounded-md" type="submit">
           Add
         </button>
       </form>
+
+      <MonthDisplay events={eventDetails} />
     </div>
   );
 };
