@@ -20,7 +20,7 @@ for(let i = 0; i < firstDateOfMonth.day(); i++){
     arrayOfDate.push({date:firstDateOfMonth.day(i), currentMonth : false})
 }
 
-console.log(arrayOfDate.length);
+
 
 
 //curent date
@@ -28,7 +28,6 @@ for(let i = firstDateOfMonth.date(); i <= lastDateOfMonth.date(); i++){
     arrayOfDate.push({date:firstDateOfMonth.date(i), currentMonth : true, today : firstDateOfMonth.date(i).toDate().toDateString() === dayjs().toDate().toDateString()})
 }
 
-console.log(arrayOfDate.length);
 
 //suffic days
 const remaining = 42 - arrayOfDate.length
@@ -37,7 +36,6 @@ for(let i = lastDateOfMonth.day(); i <= remaining; i++){
 
 
 }
-console.log(arrayOfDate.length);
 
 
 

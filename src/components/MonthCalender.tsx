@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import generateDate, { Month, months } from "../utils/Calender";
 import dayjs from "dayjs";
 
@@ -9,13 +9,26 @@ interface Num {
 const MonthCalender = ({ number }: Num) => {
   const days = ["S", "M", "T", "W", "T", "F", "S"];
   const currentDate = dayjs().month(number);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
 
-  const [today, setToday] = useState(currentDate);
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    console.log(titleRef.current?.value, nameRef.current?.value);
+  };
+  const today = currentDate;
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
+  const eventDetails = {
+    name: nameRef.current?.value,
+    title: titleRef.current?.value,
+    date: selectedDate.toDate().toDateString(),
+  };
+  console.log(eventDetails);
+
   const date: Month[] = generateDate(today.month(), today.year());
   return (
-    <div className=" ">
+    <div className=" flex gap-4">
       <div>
         {" "}
         <div className="w-80 h-80">
@@ -28,8 +41,11 @@ const MonthCalender = ({ number }: Num) => {
           </div>
           <div className="w-full  grid grid-cols-7 text-gray-600">
             {days.map((day, index) => (
-              <div className="h-14 grid place-content-center  text-sm">
-                <h1 key={index}>{day}</h1>
+              <div
+                key={index}
+                className="h-14 grid place-content-center  text-sm"
+              >
+                <h1>{day}</h1>
               </div>
             ))}
           </div>
@@ -38,9 +54,11 @@ const MonthCalender = ({ number }: Num) => {
             {date.map((item, index) => {
               const { date, currentMonth, today } = item;
               return (
-                <div className="h-14 border-t grid place-content-center text-sm">
+                <div
+                  key={index}
+                  className="h-14 border-t grid place-content-center text-sm"
+                >
                   <h1
-                    key={index}
                     className={`${currentMonth ? "" : "text-gray-400"} ${
                       today ? "text-white bg-red-600" : ""
                     } ${"h-10 w-10 grid place-content-center rounded-full hover:bg-black hover:text-white transistion-all cursor-pointer"}
@@ -60,6 +78,29 @@ const MonthCalender = ({ number }: Num) => {
           </div>
         </div>
       </div>
+
+      <form className="" onSubmit={handleSubmit}>
+        <p>Adding for {selectedDate.toDate().toDateString()}</p>
+        <label htmlFor="name">Event</label>
+        <input
+          className="bg-slate-200 border p-2"
+          type="text"
+          id="name"
+          name="name"
+          ref={nameRef}
+        ></input>
+        <label htmlFor="title">Title</label>
+        <input
+          className="bg-slate-200 border p-2 mb-2"
+          type="title"
+          id="title"
+          name="title"
+          ref={titleRef}
+        ></input>
+        <button className="p-2 bg-lime-500 text-white rounded-md" type="submit">
+          Add
+        </button>
+      </form>
     </div>
   );
 };
