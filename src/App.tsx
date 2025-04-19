@@ -4,7 +4,7 @@ import MonthCalender from "./components/MonthCalender";
 
 const eventDetails = [
   {
-    name: "WWDC 25",
+    name: "WWDC 2025",
     title: "Apple Misintelligence",
     date: dayjs().toDate().toDateString(),
   },
