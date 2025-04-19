@@ -17,10 +17,10 @@ const MonthDisplay = ({ events }: Details) => {
 
   const date: Month[] = generateDate(today.month(), today.year());
   return (
-    <div className=" flex gap-4">
+    <div className=" flex gap-4 ">
       <div>
         {" "}
-        <div className="w-80 h-80">
+        <div className="w-[1200px] ">
           <div className="flex justify-between">
             <div>
               <h1>
@@ -32,7 +32,7 @@ const MonthDisplay = ({ events }: Details) => {
             {days.map((day, index) => (
               <div
                 key={index}
-                className="h-14 grid place-content-center  text-sm"
+                className="h-24  grid place-content-left content-center text-sm"
               >
                 <h1>{day}</h1>
               </div>
@@ -45,7 +45,7 @@ const MonthDisplay = ({ events }: Details) => {
               return (
                 <div
                   key={index}
-                  className="h-14 border-t grid place-content-center text-sm"
+                  className="h-24  border-t grid place-content-left content-center text-sm"
                 >
                   <h1
                     className={`${currentMonth ? "" : "text-gray-400"} ${

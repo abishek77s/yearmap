@@ -1,7 +1,6 @@
 import { FormEvent, useRef, useState } from "react";
 import generateDate, { Month, months } from "../utils/Calender";
 import dayjs from "dayjs";
-import MonthDisplay from "./MonthDisplay";
 
 interface Num {
   number: number;
@@ -11,7 +10,7 @@ export interface EventDetails {
   name?: string;
   title?: string;
   date: string;
-  img: File | null;
+  img?: File | null;
 }
 
 const MonthCalender = ({ number }: Num) => {
@@ -26,7 +25,6 @@ const MonthCalender = ({ number }: Num) => {
   const [eventDetails, setEventDetails] = useState<EventDetails[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState(dayjs());
-  console.log(eventDetails);
 
   const handleImageChange = () => {
     const file = imageRef.current?.files?.[0];
@@ -89,7 +87,7 @@ const MonthCalender = ({ number }: Num) => {
                   <h1
                     className={`${currentMonth ? "" : "text-gray-400"} ${
                       today ? "text-white bg-red-600" : ""
-                    } ${"h-10 w-10 grid place-content-center rounded-full hover:bg-black hover:text-white transistion-all cursor-pointer"}
+                    } ${"h-10 w-10 grid content-start rounded-full hover:bg-black hover:text-white transistion-all cursor-pointer"}
               ${
                 selectedDate.toDate().toDateString() ===
                 date.toDate().toDateString()
@@ -148,8 +146,6 @@ const MonthCalender = ({ number }: Num) => {
           Add
         </button>
       </form>
-
-      <MonthDisplay events={eventDetails} />
     </div>
   );
 };
